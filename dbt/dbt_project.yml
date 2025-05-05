@@ -1,0 +1,9 @@
+name: 'snowflake_project'
+version: '1.0'
+config-version: 2
+
+profile: 'snowflake'
+
+models:
+  snowflake_project:
+    +materialized: view

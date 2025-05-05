@@ -1,0 +1,39 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r airflow/requirements.txt
+          pip install dbt-core dbt-snowflake
+
+      - name: Lint Airflow DAGs
+        run: |
+          python -m py_compile airflow/dags/*.py
+
+      - name: Run dbt commands
+        working-directory: dbt
+        run: |
+          dbt deps
+          dbt seed
+          dbt run
+          dbt test
+
+      - name: Deploy to Astronomer
+        run: |
+          curl -sSL https://install.astronomer.io | sudo bash
+          astro deploy

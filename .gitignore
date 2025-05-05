@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+dbt_modules/
+target/
+profiles.yml
+*.tfstate
+*.tfstate.backup
+.terraform/
+.env
+*.log
